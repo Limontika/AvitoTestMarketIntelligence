@@ -1,6 +1,7 @@
 from bson.objectid import ObjectId
 
 from ..db.base import poll_collection
+from app.models.base import response_model, error_response_model
 
 
 def add_poll(poll_data: dict) -> str:
@@ -16,8 +17,9 @@ def update_poll(poll_id: str, choice_id: int) -> str:
             break
     updated_poll = poll_collection.update_one({"_id": ObjectId(poll_id)}, {"$set": poll})
     if updated_poll:
-        return f"Ваш голос учтён, спасибо что проголосовали"
-    return f"Извенити произошла ошибка при учете вашего голоса, повторите попытку или обратитесь к администратору"
+        return response_model(updated_poll, f"Ваш голос учтён, спасибо что проголосовали")
+    return error_response_model("Ошибка при учете вашего голоса", 404,
+                                f"Повторите попытку или обратитесь к администратору")
 
 
 def get_result_poll(poll_id: str) -> dict:
