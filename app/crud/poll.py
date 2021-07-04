@@ -24,4 +24,11 @@ def update_poll(poll_id: str, choice_id: int) -> str:
 
 def get_result_poll(poll_id: str) -> dict:
     poll = poll_collection.find_one({"_id": ObjectId(poll_id)})
-    return poll
+    data = {
+        "poll_name": poll['poll_name'],
+        "choice_text": poll['choice_text']
+    }
+    if poll:
+        return response_model(data, f"Результаты по голосованию {poll['poll_name']}")
+    return error_response_model("Не существует указанного голосования", 404,
+                                "Проверьте данные или обратитесь к администратору")
