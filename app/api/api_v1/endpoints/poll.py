@@ -19,7 +19,7 @@ def create_poll(poll_name: str,
             choice_text[i]: 0 for i in range(len(choice_text))
         }
     }
-    return response_model(data, add_poll(data))
+    return add_poll(data)
 
 
 @router.post("/poll")
